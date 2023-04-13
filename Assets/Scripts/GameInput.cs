@@ -33,10 +33,6 @@ public class GameInput : MonoBehaviour {
         playerInputActions.Dispose();
     }
 
-    private void Update() {
-        Debug.Log(playerInputActions.Player.Move.ReadValue<Vector2>());
-    }
-
     public Vector2 GetNormalizedMovementVector() {
 
         Vector2 inputVector = playerInputActions.Player.Move.ReadValue<Vector2>();

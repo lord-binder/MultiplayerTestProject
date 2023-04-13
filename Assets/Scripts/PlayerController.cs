@@ -5,23 +5,22 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    [SerializeField] private GameInput gameInput;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileFirePoint;
 
-    /*private int coinsCount;
-    private int healthPoints;*/
+    private int coinsCount;
+    private int healthPoints;
     private float moveSpeed = 10;
     private Vector3 lastMoveDirection;
 
     private void Awake() {
         lastMoveDirection = Vector3.right;
-        /*coinsCount = 0;
-        healthPoints = 5;*/
+        coinsCount = 0;
+        healthPoints = 5;
     }
 
     private void Start() {
-        gameInput.OnFireAction += GameInput_OnFireAction;
+        GameInput.Instance.OnFireAction += GameInput_OnFireAction;
     }
 
     private void GameInput_OnFireAction(object sender, System.EventArgs e) {
@@ -30,13 +29,10 @@ public class PlayerController : MonoBehaviour {
 
     private void Update() {
         HandleMovement();
-        SetFirePointPosition();
     }
 
     private void HandleMovement() {
-        Vector2 inputVector = gameInput.GetNormalizedMovementVector();
-
-        Debug.Log(inputVector);
+        Vector2 inputVector = GameInput.Instance.GetNormalizedMovementVector();
 
         Vector3 moveDirection = new Vector2(inputVector.x, inputVector.y);
 
@@ -77,8 +73,12 @@ public class PlayerController : MonoBehaviour {
             //Can move towards Move Direction
             transform.position += moveDirection * moveDistance;
         }
+
+        // Set last move direction and FirePoint position if moveDirection is not zero
+        // Last move direction should not be zero, otherwise it would not make sense
         if (moveDirection != Vector3.zero) { 
             lastMoveDirection = moveDirection;
+            SetFirePointPosition();
         }
     }
 
@@ -91,11 +91,12 @@ public class PlayerController : MonoBehaviour {
         projectileFirePoint.position = transform.position + lastMoveDirection;
 
     }
-    /*private void TakeDamage(int damage) { 
+
+    public void TakeDamage(int damage) {
         healthPoints -= damage;
     }
 
-    private void AddCoins(int coinAmount) {
+    public void AddCoins(int coinAmount) {
         coinsCount++;
-    }*/
+    }
 }

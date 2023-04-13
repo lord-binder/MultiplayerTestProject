@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour {
 
-    private float projectileSpeed = 10.0f;
+    private static string PLAYER_TAG = "Player"; 
+    private float projectileSpeed = 20.0f;
     private Vector3 shootDirection;
 
     public void Setup(Vector3 shootDirection) {
@@ -12,6 +13,17 @@ public class ProjectileController : MonoBehaviour {
     }
 
     private void Update() {
-        transform.position += shootDirection * Time.deltaTime * 10.0f;
+        float moveDistance = Time.deltaTime * projectileSpeed;
+
+        transform.position += shootDirection * moveDistance;
+
+        Transform objectHit = Physics2D.CircleCast(transform.position, 0.5f, shootDirection, moveDistance).transform;
+        if (objectHit != null) {
+            if(objectHit.CompareTag(PLAYER_TAG)) {
+                objectHit.GetComponent<PlayerController>().TakeDamage(1);
+                Debug.Log("Player has been damaged");
+            }
+            Destroy(gameObject);
+        }
     }
 }
