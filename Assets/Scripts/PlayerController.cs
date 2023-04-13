@@ -85,7 +85,13 @@ public class PlayerController : MonoBehaviour {
             SetFirePointPosition();
         }
 
-        
+        RaycastHit2D objectHit = Physics2D.CircleCast(transform.position, playerRadius, moveDirection, moveDistance, LAYER_PLAYER);
+
+        if (objectHit && objectHit.transform.CompareTag("Coin")) {
+            Destroy(objectHit.transform.gameObject);
+            AddCoins(1);
+            Debug.Log(coinsCount);
+        }
     }
 
     private bool IsDirectionHasObstacle(Vector3 moveDirection) {
