@@ -6,14 +6,31 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     [SerializeField] private GameInput gameInput;
+    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private Transform projectileFirePoint;
 
-    private int coinsCount = 0;
-    private int healthPoints = 5;
+    /*private int coinsCount;
+    private int healthPoints;*/
     private float moveSpeed = 10;
+    private Vector3 lastMoveDirection;
+
+    private void Awake() {
+        lastMoveDirection = Vector3.right;
+        /*coinsCount = 0;
+        healthPoints = 5;*/
+    }
+
+    private void Start() {
+        gameInput.OnFireAction += GameInput_OnFireAction;
+    }
+
+    private void GameInput_OnFireAction(object sender, System.EventArgs e) {
+        FireProjectile();
+    }
 
     private void Update() {
         HandleMovement();
-        
+        SetFirePointPosition();
     }
 
     private void HandleMovement() {
@@ -22,13 +39,14 @@ public class PlayerController : MonoBehaviour {
         Debug.Log(inputVector);
 
         Vector3 moveDirection = new Vector2(inputVector.x, inputVector.y);
-        Vector3 capsuleSecondPoint = transform.position + Vector3.up * 2;
 
         float moveDistance = moveSpeed * Time.deltaTime;
-        float playerRadius = 0.5f;
+        float playerRadius = 0.5f; // Circle size is 1m, so radius = size / 2
 
         bool canWalk = !Physics2D.CircleCast(transform.position, playerRadius, moveDirection, moveDistance);
 
+
+        // Process movement in alternative directions when player move in diagonal direction
         if (!canWalk) {
             // Cannot move towards Move Direction
 
@@ -59,5 +77,25 @@ public class PlayerController : MonoBehaviour {
             //Can move towards Move Direction
             transform.position += moveDirection * moveDistance;
         }
+        if (moveDirection != Vector3.zero) { 
+            lastMoveDirection = moveDirection;
+        }
     }
+
+    private void FireProjectile() {
+        GameObject projectileFired = Instantiate(projectilePrefab, projectileFirePoint.position, Quaternion.identity);
+        projectileFired.GetComponent<ProjectileController>().Setup(lastMoveDirection);
+    }
+
+    private void SetFirePointPosition() {
+        projectileFirePoint.position = transform.position + lastMoveDirection;
+
+    }
+    /*private void TakeDamage(int damage) { 
+        healthPoints -= damage;
+    }
+
+    private void AddCoins(int coinAmount) {
+        coinsCount++;
+    }*/
 }
