@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7852163436939230063}
   - component: {fileID: 7852163436939230062}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PlayerColliderVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,7 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7852163436958714934}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ProjectileFirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7852163437067646438}
   - component: {fileID: 7852163437067646433}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -211,7 +211,7 @@ GameObject:
   - component: {fileID: 7852163437320444483}
   - component: {fileID: 7852163437320444482}
   - component: {fileID: 7852163437320444493}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -249,7 +249,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a08a2f96592f44682afd3063cd4063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameInput: {fileID: 0}
   projectilePrefab: {fileID: 315911795037050565, guid: 067318c9720f71547aae896d754345de, type: 3}
   projectileFirePoint: {fileID: 7852163436958714934}
 --- !u!58 &7852163437320444493
@@ -279,7 +278,7 @@ GameObject:
   - component: {fileID: 7852163438061448070}
   - component: {fileID: 7852163438061448064}
   - component: {fileID: 7852163438061448065}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -356,7 +355,7 @@ GameObject:
   - component: {fileID: 7852163438198761991}
   - component: {fileID: 7852163438198761988}
   - component: {fileID: 7852163438198761989}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -448,7 +447,7 @@ GameObject:
   - component: {fileID: 7852163438352688483}
   - component: {fileID: 7852163438352688480}
   - component: {fileID: 7852163438352688481}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: HPBarUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -548,7 +547,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7852163438623121137}
   - component: {fileID: 7852163438623121136}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PlayerVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}

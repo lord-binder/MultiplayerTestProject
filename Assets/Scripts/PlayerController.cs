@@ -1,12 +1,18 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour {
 
+    private const int LAYER_PLAYER = 3;
+
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileFirePoint;
+
+    private EventHandler OnDamageTaken;
 
     private int coinsCount;
     private int healthPoints;
@@ -37,31 +43,28 @@ public class PlayerController : MonoBehaviour {
         Vector3 moveDirection = new Vector2(inputVector.x, inputVector.y);
 
         float moveDistance = moveSpeed * Time.deltaTime;
-        float playerRadius = 0.5f; // Circle size is 1m, so radius = size / 2
+        float playerRadius = 0.5f;
 
-        bool canWalk = !Physics2D.CircleCast(transform.position, playerRadius, moveDirection, moveDistance);
+        bool canWalk = IsDirectionHasObstacle(moveDirection);
 
-
-        // Process movement in alternative directions when player move in diagonal direction
+        // Try move in single direction when player move in diagonal direction
         if (!canWalk) {
             // Cannot move towards Move Direction
 
-            // Check if can move towards X direction
-
             Vector3 moveDirectionX = new Vector2(inputVector.x, 0);
-            canWalk = !Physics2D.CircleCast(transform.position, playerRadius, moveDirectionX, moveDistance);
+            canWalk = IsDirectionHasObstacle(moveDirectionX);
 
+            // Check if can move towards X direction
             if (canWalk) {
                 // Can walk towards X direction
                 moveDirection = moveDirectionX;
             } else {
                 // Cannot move towards X direction
 
-                // Check if can move towards Y direction
-
                 Vector3 moveDirectionY = new Vector2(0, inputVector.y);
-                canWalk = !Physics2D.CircleCast(transform.position, playerRadius, moveDirectionY, moveDistance);
+                canWalk = IsDirectionHasObstacle(moveDirectionY);
 
+                // Check if can move towards Y direction
                 if (canWalk) {
                     // Can move towards Y direction
                     moveDirection = moveDirectionY;
@@ -69,6 +72,7 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
+        // Try move in Move Direction
         if (canWalk) {
             //Can move towards Move Direction
             transform.position += moveDirection * moveDistance;
@@ -80,6 +84,18 @@ public class PlayerController : MonoBehaviour {
             lastMoveDirection = moveDirection;
             SetFirePointPosition();
         }
+
+        
+    }
+
+    private bool IsDirectionHasObstacle(Vector3 moveDirection) {
+        float moveDistance = moveSpeed * Time.deltaTime;
+        float playerRadius = 0.5f; // Circle size is 1m, so radius = size / 2
+
+        RaycastHit2D objectHit = 
+            Physics2D.CircleCast(transform.position, playerRadius, moveDirection, moveDistance, LAYER_PLAYER);
+
+        return !objectHit;
     }
 
     private void FireProjectile() {
@@ -93,7 +109,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void TakeDamage(int damage) {
+        OnDamageTaken?.Invoke(this, EventArgs.Empty);
         healthPoints -= damage;
+        Debug.Log(healthPoints);
     }
 
     public void AddCoins(int coinAmount) {
