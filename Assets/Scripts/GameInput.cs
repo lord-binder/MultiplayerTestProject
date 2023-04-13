@@ -15,15 +15,24 @@ public class GameInput : MonoBehaviour {
     private void Awake() {
         Instance = this;
 
-        playerInputActions = new PlayerInputActions();   
+        playerInputActions = new PlayerInputActions();
+
+        playerInputActions.Player.Enable();
     }
 
+    private void OnDestroy() {
+        playerInputActions.Dispose();
+    }
+
+    private void Update() {
+        Debug.Log(playerInputActions.Player.Move.ReadValue<Vector2>());
+    }
 
     public Vector2 GetNormalizedMovementVector() {
 
         Vector2 inputVector = playerInputActions.Player.Move.ReadValue<Vector2>();
 
-        return inputVector;
+        return inputVector.normalized;
     }
 
 
