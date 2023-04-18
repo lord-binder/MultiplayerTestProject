@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour {
 
     private void Update() {
         HandleMovement();
+        UpdateFirePointPosition();
     }
 
     private void HandleMovement() {
@@ -45,7 +46,15 @@ public class PlayerController : MonoBehaviour {
         float moveDistance = moveSpeed * Time.deltaTime;
         float playerRadius = 0.5f;
 
-        bool canWalk = IsDirectionHasObstacle(moveDirection);
+        RaycastHit2D objectHit =
+            Physics2D.CircleCast(transform.position, playerRadius, moveDirection, moveDistance, LAYER_PLAYER);
+
+        bool canWalk = !objectHit;
+
+        // Set last move direction and FirePoint position if moveDirection is not zero
+        if (moveDirection != Vector3.zero) {
+            lastMoveDirection = moveDirection.normalized;
+        }
 
         // Try move in single direction when player move in diagonal direction
         if (!canWalk) {
@@ -60,7 +69,6 @@ public class PlayerController : MonoBehaviour {
                 moveDirection = moveDirectionX;
             } else {
                 // Cannot move towards X direction
-
                 Vector3 moveDirectionY = new Vector2(0, inputVector.y);
                 canWalk = IsDirectionHasObstacle(moveDirectionY);
 
@@ -80,18 +88,13 @@ public class PlayerController : MonoBehaviour {
 
         // Set last move direction and FirePoint position if moveDirection is not zero
         // Last move direction should not be zero, otherwise it would not make sense
-        if (moveDirection != Vector3.zero) { 
-            lastMoveDirection = moveDirection;
-            SetFirePointPosition();
-        }
-
-        RaycastHit2D objectHit = Physics2D.CircleCast(transform.position, playerRadius, moveDirection, moveDistance, LAYER_PLAYER);
 
         if (objectHit && objectHit.transform.CompareTag("Coin")) {
             Destroy(objectHit.transform.gameObject);
             AddCoins(1);
             Debug.Log(coinsCount);
         }
+
     }
 
     private bool IsDirectionHasObstacle(Vector3 moveDirection) {
@@ -109,7 +112,7 @@ public class PlayerController : MonoBehaviour {
         projectileFired.GetComponent<ProjectileController>().Setup(lastMoveDirection);
     }
 
-    private void SetFirePointPosition() {
+    private void UpdateFirePointPosition() {
         projectileFirePoint.position = transform.position + lastMoveDirection;
 
     }
@@ -117,7 +120,8 @@ public class PlayerController : MonoBehaviour {
     public void TakeDamage(int damage) {
         OnDamageTaken?.Invoke(this, EventArgs.Empty);
         healthPoints -= damage;
-        Debug.Log(healthPoints);
+        Debug.Log("Player has been damaged!");
+        Debug.Log("Current health: " + healthPoints);
     }
 
     public void AddCoins(int coinAmount) {

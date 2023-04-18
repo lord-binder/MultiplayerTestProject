@@ -5,7 +5,7 @@ using UnityEngine;
 public class ProjectileController : MonoBehaviour {
 
     private static string TAG_PLAYER = "Player";
-    private static string TAG_OBSTACLE = "Player";
+    private static string TAG_OBSTACLE = "Obstacle";
 
     private float projectileSpeed = 20.0f;
     private Vector3 shootDirection;
@@ -23,7 +23,6 @@ public class ProjectileController : MonoBehaviour {
         if (objectHit != null) {
             if (objectHit.CompareTag(TAG_PLAYER)) {
                 objectHit.GetComponent<PlayerController>().TakeDamage(1);
-                Debug.Log("Player has been damaged");
                 Destroy(gameObject);
             }
             else if (objectHit.CompareTag(TAG_OBSTACLE)) {
